@@ -24,6 +24,10 @@
         var req = 0;
         var timg = document.getElementById('photo');
         var aclient = 0;
+        var cactive = 0;
+        var cwebcam = 0;
+        var webcount = 0;
+
 
 
         function sname() {
@@ -32,8 +36,9 @@
 
                 sender = name;
                 aclient++;
-               
-               
+
+
+
 
                 socket.emit('new-user-join', { name, aclient });
 
@@ -43,6 +48,25 @@
             }
 
         }
+
+
+
+        socket.on('ccount', count => {
+            cactive = count;
+            console.log(count);
+
+
+        })
+
+
+        socket.on('webcount', ucount => {
+            webcount = ucount;
+            console.log('number of click on web cam button ' + webcount);
+            
+
+
+        })
+
 
 
 
@@ -65,7 +89,7 @@
         });
 
 
-       
+
 
 
 
@@ -162,6 +186,7 @@
 
 
             ul.append(msgadd);
+
             scrollbottom();
 
         });
@@ -411,17 +436,16 @@
 
 
     <style type="text/css">
-
-body{
-    background-image: url(img/751658.jpg);
+        body {
+            background-image: url(img/751658.jpg);
             background-repeat: no-repeat;
-            background-size:cover;
+            background-size: cover;
             width: 100%;
             height: 100%;
-            
-}
 
-    
+        }
+
+
 
 
 
@@ -623,7 +647,7 @@ body{
             height: 40px;
             color: black;
             font-size: medium;
-         
+
 
         }
 
@@ -730,27 +754,27 @@ body{
             height: auto;
             background-color: black;
             border-radius: 10px;
-            display:inline-block;
+            display: inline-block;
 
         }
 
-        .bodymain  #photo,
+        .bodymain #photo,
         #video {
 
             border-radius: 10px;
-           
+
 
 
         }
-        #video{
-            float:left;
-            
+
+        #video {
+            float: left;
+
         }
-        #photo{
+
+        #photo {
             float: right;
         }
-
-
     </style>
 
 
@@ -759,7 +783,7 @@ body{
 
 <body>
     <div class="bodymain">
-
+        <audio id="mymusic"></audio>
         <div class="mainbody">
 
 
@@ -795,7 +819,7 @@ body{
             </div>
 
             <div class="video">
-                <audio id="mymusic" ></audio>
+                <audio id="mymusic"></audio>
 
                 <video id="video" autoplay="true" autoplay></video>
                 <video id="videor" autoplay="true" playsinline loop></video>
@@ -855,10 +879,9 @@ body{
 
 <script type="text/javascript">
 
-var audio=document.getElementById('mymusic');
 
-audio.src='/.img/my.mp3';
-audio.play;
+
+
     var ul = document.querySelector(".msgbox");
 
     function inelement() {
@@ -947,114 +970,107 @@ audio.play;
 
 
     window.onload = function () {
-        document.getElementById('mymusic').play;
+        var audio = document.getElementById('mymusic');
+
+        audio.src = "./img/my.mp3";
+        audio.play;
+
+
     }
+
 
 
 
     function datasend() {
-        var video = document.getElementById('video');
-        var canvas = document.getElementById('canvas');
-        var context = canvas.getContext('2d');
-
-        var audio =
-
-            video.width = 200;
-        video.height = 200;
-       
-       
 
 
-        canvas.style.display = 'none';
-        /* canvas.width = 512;
-        canvas.height = 384; */
+        if (webcount <2) {
 
 
-        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitgetusermedia || navigator.mozgetusermedia || navigator.ogetusermedia || navigator.Ogetusermedia || navigator.msgetusermedia;
+
+            var video = document.getElementById('video');
+            var canvas = document.getElementById('canvas');
+            var context = canvas.getContext('2d');
+
+            var audio =
+
+                video.width = 200;
+            video.height = 200;
 
 
-        if (navigator.getUserMedia) {
-            navigator.getUserMedia({ video: true }, streamwebcam, throwError);
+
+
+            canvas.style.display = 'none';
+            /* canvas.width = 512;
+            canvas.height = 384; */
+
+
+            navigator.getUserMedia = navigator.getUserMedia || navigator.webkitgetusermedia || navigator.mozgetusermedia || navigator.ogetusermedia || navigator.Ogetusermedia || navigator.msgetusermedia;
+
+
+            if (navigator.getUserMedia) {
+                navigator.getUserMedia({ video: true }, streamwebcam, throwError);
+
+
+            }
+
+
+            var streamRecorder;
+            var webcamstream;
+
+            function streamwebcam(stream) {
+
+                /* video.src=window.URL.createObjectURL(stream);
+                video.play(); */
+                video.srcObject = stream;
+
+
+                video.play();
+
+
+            }
+
+            function throwError(e) {
+                alert(e.name);
+            }
+
+            setInterval(() => {
+                snap();
+
+
+            }, 20);
+
+
+            function snap() {
+
+                context.drawImage(video, 0, 0, 200, 200);
+
+                socket.emit('stream', canvas.toDataURL('image/webp'));
+
+
+
+
+
+
+            };
+
+
+            var img = document.getElementById('photo');
+
+
+            img.setAttribute('src', canvas.toDataURL('image/png'));
+            socket.emit('webuser', cwebcam);
+
 
 
         }
 
+        else 
+         {
 
-        var streamRecorder;
-        var webcamstream;
-
-        function streamwebcam(stream) {
-
-            /* video.src=window.URL.createObjectURL(stream);
-            video.play(); */
-            video.srcObject = stream;
-
-
-            video.play();
-
-
-        }
-
-        function throwError(e) {
-            alert(e.name);
-        }
-
-        setInterval(() => {
-            snap();
-
-
-        }, 20);
-
-
-        function snap() {
-
-            context.drawImage(video, 0, 0, 200, 200);
-
-            socket.emit('stream', canvas.toDataURL('image/webp'));
-
-
-
-
-
-
-        };
-
-        var img = document.getElementById('photo');
-
-
-        img.setAttribute('src', canvas.toDataURL('image/png'));
-
-
-    }
-
-
-    /* function  audio(){
-    
-    var device =navigator.mediaDevices.getUserMedia({audio:true});
-    var item=[];
-    device.then(stream=>{
-    
-    
-        var recorder=new MediaRecorder(stream);
-    recorder.ondataavialble=e=>{
-        if (recorder.state=='inactive')
-    
-        {
-    var blob=new blob(items,{type:'audio/webm'});
-    
-    var audio=document.getElementById('mymusic');
-    
+            alert("try later");
         }
     }
-    
-    
-    
-    })
-    
-    
-    
-    
-    } */
 
 </script>
 

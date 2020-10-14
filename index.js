@@ -38,6 +38,7 @@ internetAvailable().then(function () {
 var users = [];
 var left = [];
 var client = 0;
+var cuser=0;
 
 io.on('connection', (socket) => {
 
@@ -58,7 +59,7 @@ io.on('connection', (socket) => {
       client++;
       console.log(data.name + ':' + client + ':' + 'connected');
 
-
+socket.emit('ccount',client );
 
 
       users[data.name] = socket.id;
@@ -89,11 +90,19 @@ io.on('connection', (socket) => {
 
    });
 
+   socket.on('webuser', webcount => {
+       cuser++;
+      
+      socket.broadcast.emit('webcount', cuser);
+
+   });
+
+
+
+
    socket.on('disconnect', message => {
       socket.broadcast.emit('left', left[socket.id]);
       socket.broadcast.emit('leftli', left[socket.id]);
-
-
 
       console.log(left[socket.id] + ':' + 'disconnected');
       delete left[socket.id];
