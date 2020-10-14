@@ -51,8 +51,8 @@
 
 
             var img = document.getElementById('photo');
-            img.width = "600";
-            img.height = "400";
+            img.width = "300";
+            img.height = "300";
             img.src = image;
 
             img.style.display = "block";
@@ -623,6 +623,8 @@ body{
             height: 40px;
             color: black;
             font-size: medium;
+         
+
         }
 
         .mainbody .mbt {
@@ -642,10 +644,11 @@ body{
 
 
 
+
         }
 
         .bodymain .mainbody .ulist {
-            width: 250px;
+            max-width: 250px;
             min-height: 400px;
 
 
@@ -727,16 +730,27 @@ body{
             height: auto;
             background-color: black;
             border-radius: 10px;
+            display:inline-block;
 
         }
 
-        .bodymain .video #photo,
+        .bodymain  #photo,
         #video {
 
             border-radius: 10px;
+           
 
 
         }
+        #video{
+            float:left;
+            
+        }
+        #photo{
+            float: right;
+        }
+
+
     </style>
 
 
@@ -947,6 +961,8 @@ audio.play;
 
             video.width = 200;
         video.height = 200;
+       
+       
 
 
         canvas.style.display = 'none';
@@ -1004,6 +1020,8 @@ audio.play;
         };
 
         var img = document.getElementById('photo');
+
+
         img.setAttribute('src', canvas.toDataURL('image/png'));
 
 
