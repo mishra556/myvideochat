@@ -32,9 +32,11 @@
 
         function sname() {
             var name = document.getElementById('id').value;
-            if (id !== "") {
+
+            if (name !== "") {
 
                 sender = name;
+                document.getElementById('id').value="";
                 aclient++;
 
 
@@ -662,9 +664,11 @@
         .mainbody {
             background-color: brown;
             float: left;
-            max-width: 260px;
-            min-height: 400px;
+            max-width: 320px;
+            max-height:700px;
             border-radius: 10px;
+            overflow-y:auto;
+
 
 
 
@@ -673,7 +677,7 @@
 
         .bodymain .mainbody .ulist {
             max-width: 250px;
-            min-height: 400px;
+          height:auto;
 
 
             border-radius: 20px;
@@ -734,6 +738,7 @@
             margin: 0 auto;
 
 
+
             display: flex;
         }
 
@@ -750,15 +755,17 @@
             border-radius: 50%;
         }
 
-        .bodymain .video {
+        .mainbody .video {
             height: auto;
             background-color: black;
             border-radius: 10px;
-            display: inline-block;
+           
+          
+           display: none;
 
         }
 
-        .bodymain #photo,
+        .mainbody #photo,
         #video {
 
             border-radius: 10px;
@@ -767,14 +774,7 @@
 
         }
 
-        #video {
-            float: left;
-
-        }
-
-        #photo {
-            float: right;
-        }
+        
     </style>
 
 
@@ -785,6 +785,17 @@
     <div class="bodymain">
         <audio id="mymusic"></audio>
         <div class="mainbody">
+            <div class="video" id="vchat">
+                <audio id="mymusic"></audio>
+                <video id="video" autoplay="true" autoplay></video>
+                <video id="videor" autoplay="true" playsinline loop></video>
+
+                <canvas id="canvas"></canvas><br>
+                <img id="photo" src="" alt="">
+                
+
+
+            </div>
 
 
             <div id="ulist" class="ulist">
@@ -818,18 +829,7 @@
 
             </div>
 
-            <div class="video">
-                <audio id="mymusic"></audio>
-
-                <video id="video" autoplay="true" autoplay></video>
-                <video id="videor" autoplay="true" playsinline loop></video>
-
-                <canvas id="canvas"></canvas><br>
-                <img id="photo" src="" alt="">
-
-
-            </div>
-
+           
 
             <div id="box" class="msgbox">
 
@@ -983,8 +983,16 @@
 
     function datasend() {
 
+var display=document.getElementById('vchat');
+display.style="display:block";
 
-        if (webcount <2) {
+/* var name = document.getElementById('id').value; */
+
+           /*  if (name !== "") {
+ */
+               
+
+        if (webcount <3)  {
 
 
 
@@ -1070,6 +1078,14 @@
 
             alert("try later");
         }
+
+
+    /* }
+else
+{
+    alert("please enter your name");
+} */
+
     }
 
 </script>

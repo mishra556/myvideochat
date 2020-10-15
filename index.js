@@ -54,7 +54,7 @@ io.on('connection', (socket) => {
       socket.emit('heading', 'welcome' + ':' + data.name);
 
 
-      io.emit('auser', data.name);
+      socket.broadcast.emit('auser', data.name);
 
       client++;
       console.log(data.name + ':' + client + ':' + 'connected');
@@ -132,7 +132,8 @@ socket.emit('ccount',client );
                else {
 
 
-                  io.emit('ufname', { name, filename });
+                   io.emit('ufname', { name, filename });
+                  
 
                }
             });
