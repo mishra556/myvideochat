@@ -24,6 +24,12 @@ app.get('/login', function (req, res) {
 app.get('/chat', function (req, res) {
    res.sendfile('index.html');
 });
+
+app.get('/fullview', function (req, res) {
+   res.sendfile('screen.html');
+});
+
+
 var internetAvailable = require("internet-available");
 
 internetAvailable().then(function () {
@@ -62,6 +68,7 @@ io.on('connection', (socket) => {
 socket.emit('ccount',client );
 
 
+
       users[data.name] = socket.id;
       left[socket.id] = data.name;
 
@@ -70,8 +77,9 @@ socket.emit('ccount',client );
    });
 
 
-
-
+socket.on('fullmsg' , msg=>{
+   socket.emit('msgall',msg)
+})
 
 
 
@@ -205,6 +213,8 @@ socket.emit('ccount',client );
 
 
       socket.broadcast.emit('recimg', image);
+      socket.broadcast.emit('fullimg', image);
+
    });
 
 
