@@ -26,7 +26,7 @@
         var aclient = 0;
         var cactive = 0;
         var cwebcam = 0;
-        var webcount = 0;
+        var webcount = 1;
 
 
 
@@ -999,7 +999,11 @@
     function datasend() {
 
 
-    alert(webcount);
+var display=document.getElementById('vchat');
+display.style="display:block";
+
+
+            
 
         if (webcount <3)  {
 
@@ -1089,11 +1093,7 @@
         }
 
 
-    /* }
-else
-{
-    alert("please enter your name");
-} */
+  
 
     }
 
