@@ -26,7 +26,7 @@
         var aclient = 0;
         var cactive = 0;
         var cwebcam = 0;
-        var webcount =1;
+        var webcount = 1;
 
 
 
@@ -36,13 +36,21 @@
             if (name !== "") {
 
                 sender = name;
-                document.getElementById('id').value="";
+                document.getElementById('id').value = "";
                 aclient++;
 
 
 
 
                 socket.emit('new-user-join', { name, aclient });
+
+                socket.emit('reqcur', webcount);
+
+                socket.on('curactive', cuser => {
+                    webcount = cuser;
+
+                });
+
 
             }
             else {
@@ -64,7 +72,7 @@
         socket.on('webcount', ucount => {
             webcount = ucount;
             console.log('number of click on web cam button ' + webcount);
-            
+
 
 
         })
@@ -77,12 +85,14 @@
 
 
             var img = document.getElementById('photo');
-            img.width = "300";
+            var al = document.getElementById('sub');
+            img.width = "400";
             img.height = "300";
             img.src = image;
 
             img.style.display = "block";
             img.style.margin = "10px";
+            al.style = "visibility: visible";
 
 
 
@@ -665,9 +675,9 @@
             background-color: brown;
             float: left;
             max-width: 320px;
-            max-height:700px;
+            max-height: 700px;
             border-radius: 10px;
-            overflow-y:auto;
+            overflow-y: auto;
 
 
 
@@ -677,7 +687,7 @@
 
         .bodymain .mainbody .ulist {
             max-width: 250px;
-          height:auto;
+            height: auto;
 
 
             border-radius: 20px;
@@ -759,9 +769,9 @@
             height: auto;
             background-color: black;
             border-radius: 10px;
-           
-          
-           display: none;
+
+
+            display: none;
 
         }
 
@@ -775,8 +785,7 @@
         }
 
 
-        .mainbody a
-        {
+        .mainbody a {
             width: 200px;
             height: 50px;
             background-color: floralwhite;
@@ -785,13 +794,13 @@
             border-radius: 10px;
             box-shadow: 3px 5px 10px black;
             margin: 0 auto;
-            font-size:x-large;
-            margin:10px;
+            font-size: x-large;
+            margin: 10px;
         }
-#sub{
-visibility: hidden;
-}
-        
+
+        #sub {
+            visibility: hidden;
+        }
     </style>
 
 
@@ -809,7 +818,7 @@ visibility: hidden;
 
                 <canvas id="canvas"></canvas><br>
                 <img id="photo" src="" alt="receiver srceen ">
-                <a id="sub" href="fullview"> Click to See  Full screen </a> <br>
+                <a id="sub" href="fullview"> Click to See Full screen </a> <br>
 
 
             </div>
@@ -846,7 +855,7 @@ visibility: hidden;
 
             </div>
 
-           
+
 
             <div id="box" class="msgbox">
 
@@ -1001,14 +1010,18 @@ visibility: hidden;
     function datasend() {
 
 
-var display=document.getElementById('vchat');
-display.style="display:block";
+        var display = document.getElementById('vchat');
+        display.style = "display:block";
 
 
-            
 
-        if (webcount <3)  {
 
+
+        alert('User connected ' + webcount);
+
+
+        if (webcount < 3) {
+ 
 
 
             var video = document.getElementById('video');
@@ -1088,14 +1101,14 @@ display.style="display:block";
 
         }
 
-        else 
-         {
+        else {
 
+            var img = document.getElementById('photo');
+            img.src = "";
             alert("try later");
         }
 
 
-  
 
     }
 

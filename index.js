@@ -44,7 +44,7 @@ internetAvailable().then(function () {
 var users = [];
 var left = [];
 var client = 0;
-var cuser=0;
+var cuser=1;
 
 io.on('connection', (socket) => {
 
@@ -58,6 +58,7 @@ io.on('connection', (socket) => {
 
       socket.emit('message', 'welcome' + ':' + data.name);
       socket.emit('heading', 'welcome' + ':' + data.name);
+      console.log(cuser);
 
 
       socket.broadcast.emit('auser', data.name);
@@ -81,6 +82,10 @@ socket.on('fullmsg' , msg=>{
    socket.emit('msgall',msg)
 })
 
+socket.on('reqcur', webcount=>{
+  
+   socket.emit('curactive', cuser  );
+})
 
 
 
@@ -113,6 +118,7 @@ socket.on('fullmsg' , msg=>{
       socket.broadcast.emit('leftli', left[socket.id]);
 
       console.log(left[socket.id] + ':' + 'disconnected');
+    
       delete left[socket.id];
    });
 
