@@ -640,6 +640,9 @@
             float: right;
             clear: both;
         }
+        #video{
+           display: none;
+        }
 
 
 
@@ -785,7 +788,7 @@
         }
 
 
-        .mainbody a {
+        #sub {
             width: 200px;
             height: 50px;
             background-color: floralwhite;
@@ -798,9 +801,9 @@
             margin: 10px;
         }
 
-        #sub {
+        /* #sub {
             visibility: hidden;
-        }
+        } */
     </style>
 
 
@@ -818,8 +821,7 @@
 
                 <canvas id="canvas"></canvas><br>
                 <img id="photo" src="" alt="receiver srceen ">
-                <a id="sub" href="fullview"> Click to See Full screen </a> <br>
-
+               
 
             </div>
 
@@ -883,7 +885,9 @@
                     <input type="submit" id="msend" class="btn" onclick="outelement();" value="send">
                     <!--   <a id="attach"><span><img id="att" src="img/download.jpg" /></span></a> -->
                     <!-- <i class="material-icons" >attachment</i> -->
-                    <input type="submit" class="webcam" value="video chat" onclick="datasend();">
+                    <!-- <input type="submit" class="webcam" value="video chat" onclick="datasend();"> -->
+                    <a id="sub" href="fullview"> Chat with live video </a> <br>
+
 
                 </div>
                 <div class="ufile">
@@ -1010,7 +1014,7 @@
     function datasend() {
 
 
-        var display = document.getElementById('vchat');
+         var display = document.getElementById('vchat');
         display.style = "display:block";
 
 
@@ -1021,6 +1025,8 @@
 
 
         if (webcount < 3) { */
+
+
  
 
 

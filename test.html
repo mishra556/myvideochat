@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+
+
+
+        var socket = io();
+
+
+        
+        
+
+
+
+        </script>
+</head>
+<body>
+    
+
+
+    
+
+    <video id="local" autoplay></video>
+    <video id="remote" autoplay></video>
+
+
+
+
+    <script type="text/javascript"> 
+var a= new RTCPeerConnection();
+var b= new RTCPeerConnection();
+
+
+
+a.onicecandidate=e=>
+{
+if(e.candidate){
+ 
+b.onicecandidate(e.candidate);
+
+}
+}
+
+b.onicecandidate=e=>
+{
+if(e.candidate){
+npma.onicecandidate(e.candidate);
+
+}
+}
+navigator.mediaDevices.getUserMedia({
+    video:true,
+    audio:true
+})
+.then(stream =>{
+    document.getElementById("local").srcObject=stream;
+        a.addStream(stream);
+        return a.createOffer();
+})
+.then(offer => a.setLocalDescription(new RTCSessionDescription(offer)))
+
+.then(()=> b.setRemoteDescription(a.localDescription))
+.then(()=> b.createAnswer())
+.then(answer=>b.setLocalDescription(new RTCSessionDescription(answer)))
+.then(()=>a.setRemoteDescription(b.localDescription));
+
+
+b.ontrack=e=>{
+    document.getElementById("remote").srcObject=e.streams[0];
+    console.log(e.stream);
+}
+    </script>
+
+</body>
+</html>

@@ -1,96 +1,1087 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-<style type="text/css">
-
-.main {
-    max-width:100%;
-    height: 500px;
-    
-
-   background-color: aqua;
-
-}
-.footer{
-    max-width:100%px; 
-    height:100px;
-}
-.footer .sendm{
-    max-width:  400px;
-    height: 60px;
-    
-}
-
-#full{
-    min-width:2000px;
-    height:100vh;
-    display: block;
-    
-
-
-
-}
-
-
-
-
-</style>
-<script src="/socket.io/socket.io.js"></script>
-
-<script>
-
-
-
-    var socket = io();
-    var name;
-    var receiver = '';
-    var sender = '';
-    var flag = 0;
+    <title>myonlinechat.App</title>
 
 
 
 
 
-    socket.on('fullimg', image => {
+    <script src="/socket.io/socket.io.js"></script>
 
- var ma=document.getElementById('main');
-
-var img = document.getElementById('full');
-
-img.src = image;
+    <script>
 
 
 
+        var socket = io();
+        var name;
+        var receiver = '';
+        var sender = '';
+        var flag = 0;
+        var req = 0;
+        var timg = document.getElementById('photo');
+        var aclient = 0;
+        var cactive = 0;
+        var cwebcam = 0;
+        var webcount = 1;
+
+
+
+        function sname() {
+            var name = document.getElementById('id').value;
+
+            if (name !== "") {
+
+                sender = name;
+                document.getElementById('id').value = "";
+                aclient++;
 
 
 
 
-});
+                socket.emit('new-user-join', { name, aclient });
+
+                socket.emit('reqcur', webcount);
+
+                socket.on('curactive', cuser => {
+                    webcount = cuser;
+
+                });
 
 
-socket.emit("fullmsg","welcome in our home");
-socket.on('msgall', msg =>{
-    console.log(msg);
+            }
+            else {
+                alert("please enter your name");
+            }
 
-})
+        }
 
+
+
+        socket.on('ccount', count => {
+            cactive = count;
+            console.log(count);
+
+
+        })
+
+
+        socket.on('webcount', ucount => {
+            webcount = ucount;
+            console.log('number of click on web cam button ' + webcount);
+
+
+
+        })
+
+
+
+
+
+        socket.on('recimg', image => {
+
+
+            var img = document.getElementById('photo');
+            var al = document.getElementById('sub');
+
+            img.src = image;
+
+            img.style.display = "block";
+            img.style.margin = "10px";
+
+
+
+
+            imgbottom();
+
+        });
+
+
+
+
+
+
+
+
+
+
+        socket.on('heading', msg => {
+            document.getElementById('header').innerText = msg;
+
+        });
+
+        function upload() {
+
+
+            if (flag == 0) {
+                socket.emit('upload', name);
+
+            }
+            else if (flag == 1) {
+                socket.emit('touser', { name, receiver });
+
+
+            }
+
+
+        }
+
+
+
+
+
+        socket.on('ufname', data => {
+
+            var time = document.getElementById('mytime').innerText;
+            var ul = document.querySelector(".msgbox");
+            var st = data.name;
+            var file = data.filename;
+
+            var listtext = document.createTextNode(st);
+            var msgadd = document.createElement('div');
+
+            msgadd.className = "msg left";
+            msgadd.innerText = 'Sender :' + st + '    ' + '  ' + time;
+            /* msgadd.innerHTML='<img src=img/welcomescan.jpg />'; */
+            var img = document.createElement('img');
+
+            img.width = "200";
+            img.height = "200";
+            img.src = 'img/' + file;
+            img.style.display = "block";
+            img.style.marginBottom = "10px";
+            var path = img.src;
+
+
+            msgadd.append(img);
+
+
+
+
+            ul.append(msgadd);
+            scrollbottom();
+
+        });
+
+
+
+        socket.on('upname', data => {
+
+            var time = document.getElementById('mytime').innerText;
+            var ul = document.querySelector(".msgbox");
+            var st = data.name;
+            var file = data.filename;
+
+            var listtext = document.createTextNode(st);
+            var msgadd = document.createElement('div');
+
+            msgadd.className = "msg left";
+            msgadd.innerText = st + '    ' + '  ' + time;
+            /* msgadd.innerHTML='<img src=img/welcomescan.jpg />'; */
+            var img = document.createElement('img');
+
+            img.width = "200";
+            img.height = "200";
+            img.src = 'img/' + file;
+            img.style.display = "block";
+            img.style.marginBottom = "10px";
+            var path = img.src;
+
+
+            msgadd.append(img);
+
+
+
+
+            ul.append(msgadd);
+
+            scrollbottom();
+
+        });
+
+
+
+        // old code ---------------------------------------------------
+        socket.on('left', name => {
+
+            var time = document.getElementById('mytime').innerText;
+            var ul = document.querySelector(".msgbox");
+            var st = name;
+            var stleft = name;
+
+            var listtext = document.createTextNode(st);
+            var msgadd = document.createElement('div');
+            msgadd.className = "msg left";
+            msgadd.innerText = st + ': ' + 'left the chat' + "   " + time;
+
+
+            /* document.getElementsByClassName('.msgbox').appendChild(msgadd); */
+            ul.append(msgadd);
+            scrollbottom();
+
+
+
+
+
+
+
+        });
+
+
+        socket.on('leftli', name => {
+
+            var st = name;
+            var msg = st;
+
+            console.log(st);
+
+
+            var ul = document.getElementById('userl');
+
+            var listtext = document.createTextNode(st);
+
+            var msgbtn = document.createElement('li');
+
+            msgbtn.innerText = st + ': ' + 'left the chat';
+            msgbtn.id = ".suser";
+            msgbtn.className = "suser";
+
+            ul.append(msgbtn);
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+        socket.on('message', message => {
+            var time = document.getElementById('mytime').innerText;
+            var ul = document.querySelector(".msgbox");
+            var st = message;
+
+            var listtext = document.createTextNode(st);
+            var msgadd = document.createElement('div');
+            msgadd.className = "msg left";
+            msgadd.innerText = st + '    ' + '  ' + time;
+
+
+            /* document.getElementsByClassName('.msgbox').appendChild(msgadd); */
+            ul.append(msgadd);
+
+            scrollbottom();
+
+
+
+
+        });
+
+
+        socket.on('msghead', message => {
+            var time = document.getElementById('mytime').innerText;
+            var ul = document.querySelector(".msgbox");
+            var st = message;
+
+            var listtext = document.createTextNode(st);
+            var msgadd = document.createElement('div');
+            msgadd.className = "msg left";
+            msgadd.innerText = st;
+
+
+            /* document.getElementsByClassName('.msgbox').appendChild(msgadd); */
+            ul.append(msgadd);
+            scrollbottom();
+
+
+
+        });
+
+
+
+
+        socket.on('pumsg', data => {
+            var time = document.getElementById('mytime').innerText;
+            var ul = document.querySelector(".msgbox");
+            var st = data.sender + ':' + data.msg;
+
+            var listtext = document.createTextNode(st);
+            var msgadd = document.createElement('div');
+            msgadd.className = "msg left";
+            msgadd.innerText = st + '    ' + '  ' + time;
+
+
+            /* document.getElementsByClassName('.msgbox').appendChild(msgadd); */
+            ul.append(msgadd);
+            scrollbottom();
+
+
+
+        });
+
+
+
+
+        socket.on('pmsg', data => {
+
+            var ul = document.querySelector(".msgbox");
+            var st = data.sender + ':' + data.msg;
+            var time = document.getElementById('mytime').innerText;
+
+            var listtext = document.createTextNode(st);
+            var msgadd = document.createElement('div');
+            msgadd.className = "msg left";
+            msgadd.innerText = st + '    ' + '  ' + time;
+
+
+            /* document.getElementsByClassName('.msgbox').appendChild(msgadd); */
+            ul.append(msgadd);
+            scrollbottom();
+
+
+
+        });
+
+
+
+
+
+
+
+
+
+        function scrollbottom() {
+
+            var mbox = document.getElementById("box");
+            mbox.scrollTop = mbox.scrollHeight;
+        }
+
+
+        function imgbottom() {
+           /*  alert('i am here'); */
+            var boxh = document.getElementById("vchat");
+            boxh.scrollTop = boxh.scrollHeight;
+        }
+
+
+
+
+
+
+
+
+        socket.on('user-join', name => {
+
+            var st = name + ':' + "join the chat";
+            var time = document.getElementById('mytime').innerText;
+            var ul = document.querySelector(".msgbox");
+
+            var listtext = document.createTextNode(st);
+            var msgadd = document.createElement('div');
+            msgadd.className = "msg left";
+            msgadd.innerText = st + '    ' + '  ' + time;
+
+
+            /* document.getElementsByClassName('.msgbox').appendChild(msgadd); */
+            ul.append(msgadd);
+            scrollbottom();
+        });
+
+
+
+
+
+        socket.on('auser', username => {
+
+            var st = username;
+            var msg = st;
+
+            console.log(st);
+
+
+            var ul = document.getElementById('userl');
+
+            var listtext = document.createTextNode(st);
+
+            var msgbtn = document.createElement('li');
+
+            msgbtn.innerText = st;
+            msgbtn.id = ".suser";
+            msgbtn.className = "suser";
+
+            ul.append(msgbtn);
+
+            var item = document.querySelectorAll("#userl li"), tab = [], index;
+
+            console.log(item);
+
+
+
+            for (var i = 0; i < item.length; i++) {
+                item[i].onclick = function () {
+                    index = tab.indexOf(this.innerHTML);
+
+                    var usname = this.innerHTML;
+                    receiver = usname;
+                    flag = 1;
+
+                    alert('Selected user :' + usname);
+
+
+
+                };
+            }
+
+
+
+
+
+
+        });
+
+
+
+
+
+
+
+    </script>
+
+
+    <style type="text/css">
+        body {
+            background-image: url(img/751658.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
+            width: 100%;
+            height: 100%;
+
+        }
+
+
+
+
+
+        .sd1 .main {
+
+            max-width: 1000px;
+            height: 150px;
+            background-color: rgb(54, 40, 20);
+            border-radius: 10px;
+            margin: 0 auto;
+            color: white;
+            margin: 0 auto;
+            margin-bottom: 20px;
+            margin-top: -15px;
+            text-align: center;
+
+
+
+
+
+        }
+
+        .sd1 .main .eid input[type=text] {
+            float: right;
+            width: 200px;
+            height: 35px;
+            border-radius: 10px;
+
+        }
+
+        .sd1 .main .eid input[type=submit] {
+            float: right;
+            width: 100px;
+            height: 40px;
+            border-radius: 10px;
+
+        }
+
+
+
+        .sd1 .main img {
+            float: left;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+
+
+
+        .send {
+            margin-top: 50px;
+            max-width: 900px;
+
+            height: auto;
+            background-color: rgb(117, 111, 101);
+            border-radius: 10px;
+            margin: 0 auto;
+
+        }
+
+
+        .send .form {
+            max-width: 900px;
+            margin: 0 auto;
+            margin-top: 20px;
+            border: 1px solid yellow;
+        }
+
+        .send .form input[type=text] {
+            margin: 10px;
+            max-width: 350px;
+            min-width: 200px;
+            height: 40px;
+            border-radius: 10px;
+
+
+        }
+
+        .send .form .btn {
+            width: 100px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 5px;
+
+
+        }
+
+        .send .ufile {
+            max-width: 900px;
+            margin: 0 auto;
+            margin-top: 20px;
+            border: 1px solid yellow;
+        }
+
+
+        .send .ufile input[type=file] {
+
+            width: 200px;
+            height: 40px;
+            border-color: chartreuse;
+            margin: 10px;
+            border-radius: 10px;
+
+        }
+
+        .send .ufile input[type=submit] {
+            width: 100px;
+            height: 40px;
+
+            margin: 10px;
+            border-radius: 35%;
+            box-shadow: 3px 5px 10px black;
+
+        }
+
+        .send .form input[type=submit],
+        input[type=button] {
+            width: 100px;
+            height: 40px;
+
+            margin: 10px;
+            border-radius: 35%;
+            box-shadow: 3px 5px 10px black;
+
+        }
+
+        .send .form input[type=submit]:hover {
+
+            box-shadow: 1px 1px 10px black;
+            background-color: yellow;
+
+        }
+
+        .send .ufile input[type=submit]:hover {
+
+            box-shadow: 1px 1px 10px black;
+            background-color: yellow;
+        }
+
+        .sd1 .msgbox {
+
+
+
+            max-width: 1000px;
+            min-width: 200px;
+            height: 200px;
+
+            border-radius: 10px;
+
+
+            color: white;
+            background-color: tomato;
+            overflow-y: auto;
+            margin: 0 auto;
+
+
+
+        }
+
+        .msg {
+            width: 200px;
+            background-color: gray;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 17px 12px;
+            border: 2px solid black;
+
+
+
+
+        }
+
+        .left {
+            float: left;
+            clear: both;
+        }
+
+        .right {
+            float: right;
+            clear: both;
+        }
+
+
+
+
+        .main p,
+        h1 {
+            font-size: medium;
+            text-align: center;
+            font-weight: bolder;
+            font-family: 'Times New Roman', Times, serif;
+
+        }
+
+        .main .mbs {
+            border-radius: 20px;
+            width: 200px;
+            height: 40px;
+            color: black;
+            font-size: medium;
+
+
+        }
+
+
+
+
+
+
+        .suser {
+            max-width: 300px;
+            height: 40px;
+            border-radius: 5px;
+            margin: 10px;
+            box-shadow: 3px 6px 10px black;
+            font-size: medium;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .suser:hover {
+            box-shadow: 1px 1px 10px black;
+        }
+
+
+
+        .bodymain {
+            max-width: 1000px;
+            height: auto;
+            margin: 0 auto;
+
+
+        }
+
+
+        #a {
+            font-size: medium;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            text-shadow: 3px 5px 10px black;
+        }
+
+        #att {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        .bodymain #vchat {
+            max-width: 1000px;
+            height: 400px;
+            background-color: black;
+            border-radius: 10px;
+            overflow-y: auto;
+
+
+
+        }
+
+        .video #photo,
+        #video {
+
+            border-radius: 10px;
+
+
+
+        }
+
+
+        .main a {
+            width: 200px;
+            height: 50px;
+            background-color: floralwhite;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 3px 5px 10px black;
+            margin: 0 auto;
+            font-size: x-large;
+            margin: 10px;
+        }
+
+        #sub {
+            visibility: hidden;
+        }
+
+        #video {
+            display: none;
+        }
+
+        #photo {
+            max-width: 1500px;
+            min-width: 600px;
+            height: 400px;
+            margin: 0 auto;
+        }
+    </style>
+
+
+
+</head>
+
+<body>
+    <div class="bodymain">
+        <!--   <audio id="mymusic"></audio> -->
+        <!--   <div class="mainbody">
+            <div class="video" id="vchat">
+                <audio id="mymusic"></audio>
+                <video id="video" autoplay="true" autoplay></video>
+                <video id="videor" autoplay="true" playsinline loop></video>
+
+                <canvas id="canvas"></canvas><br>
+                <img id="photo" src="" alt="receiver srceen ">
+                <a id="sub" href="fullview"> Click to See Full screen </a> <br>
+
+
+            </div>
+
+
+            <div id="ulist" class="ulist">
+                <p> Connected User.....</p>
+                <ul id="userl">
+
+
+                </ul>
+
+
+            </div>
+
+
+        </div> -->
+
+        <div class="sd1">
+            <div class="main">
+                <img id="img" src="img/WelcomeScan.png">
+
+                <h3>mychatgroup.App</h3>
+                <p id="header">Welcome in our chat Room</p>
+                <p id="mytime">4.00 AM</p>
+
+
+                <div class="eid">
+
+                    <input type="submit" id="subid" onclick="sname();" />
+                    <input type="text" id="id" placeholder="Enter your Name" />
+
+                </div>
+
+            </div>
+
+            <div class="video" id="vchat">
+                <audio id="mymusic"></audio>
+                <video id="video" autoplay="true" autoplay></video>
+                <video id="videor" autoplay="true" playsinline loop></video>
+
+                <canvas id="canvas"></canvas><br>
+                <img id="photo" src="">
+
+
+            </div>
+
+            <div id="box" class="msgbox">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            </div>
+
+
+
+
+            <div class="send">
+                <div class="form">
+                    <input type="text" id="stext">
+                    <input type="submit" id="msend" class="btn" onclick="outelement();" value="send">
+                    <!--   <a id="attach"><span><img id="att" src="img/download.jpg" /></span></a> -->
+                    <!-- <i class="material-icons" >attachment</i> -->
+                    <input type="submit" class="webcam" value="video chat" onclick="datasend();">
+
+                </div>
+                <div class="ufile">
+                    <form method="POST" action="/" enctype="multipart/form-data">
+                        <input id="file" type="file" name="file" class="f" />
+                        <input type="submit" class="f" value="Upload" onclick="upload();">
+
+                </div>
+                <p id="a">Author:Mukesh kumar</p>
+
+            </div>
+        </div>
+
+    </div>
+
+
+</body>
+
+
+<script type="text/javascript">
+
+
+
+
+    var ul = document.querySelector(".msgbox");
+
+    function inelement() {
+
+        var msgadd = document.createElement('div');
+        var st = document.getElementById('stext').value;
+        var time = document.getElementById('mytime').innerText;
+        var listtext = document.createTextNode(st);
+        console.log(listtext);
+        msgadd.innerText = listtext;
+
+        msgadd.className = "msg left"
+
+        var mytime = clockdisplay();
+        msgadd.innerText = st + '    ' + '  ' + time;
+
+
+        ul.append(msgadd);
+
+        scrollbottom();
+
+
+
+
+
+
+    }
+
+    function outelement() {
+
+        var msgadd = document.createElement('div');
+        var st = document.getElementById('stext').value;
+
+        var time = document.getElementById('mytime').innerText;
+        var listtext = document.createTextNode(st);
+        console.log(listtext);
+        msgadd.innerText = listtext;
+
+        msgadd.className = "msg right";
+
+        var mytime = clockdisplay();
+        msgadd.innerText = st + '    ' + '  ' + time;
+
+
+
+
+
+
+
+
+        var msgt = name + ':' + msgadd.innerText;
+        if (flag == 0) {
+            socket.emit('chatp', { sender, receiver, msg: st, mtime: time });
+        }
+        else if (flag == 1) {
+            socket.emit('chatm', { sender, receiver, msg: st, mtime: time });
+        }
+
+        /* socket.emit('chatm', {sender,receiver,msg:st,value:flag}); */
+
+        msgadd.innerText = 'you :' + st + '    ' + '  ' + time;
+        ul.append(msgadd);
+
+        scrollbottom();
+
+        document.getElementById('stext').value = "";
+
+    }
+
+
+    setInterval(clockdisplay, 500);
+
+    function clockdisplay() {
+
+
+        /* document.getElementById('mytime').innerHTML = Date(); */
+
+        var today = new Date();
+        var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var dateTime = date + ' ' + time;
+        document.getElementById('mytime').innerHTML = time;
+        return time;
+
+    }
+
+
+    window.onload = function () {
+        var audio = document.getElementById('mymusic');
+
+        audio.src = "./img/my.mp3";
+        audio.play;
+
+
+    }
+
+
+
+
+    function datasend() {
+
+
+        /*   var display = document.getElementById('vchat');
+          display.style = "display:block";
+   */
+
+
+
+
+        /*   alert('User connected ' + webcount);
+  
+  
+          if (webcount < 3) { */
+
+
+
+        var video = document.getElementById('video');
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+
+        var audio =
+
+            video.width = 200;
+        video.height = 200;
+
+
+
+
+        canvas.style.display = 'none';
+        /* canvas.width = 512;
+        canvas.height = 384; */
+
+
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitgetusermedia || navigator.mozgetusermedia || navigator.ogetusermedia || navigator.Ogetusermedia || navigator.msgetusermedia;
+
+
+        if (navigator.getUserMedia) {
+            navigator.getUserMedia({ video: true }, streamwebcam, throwError);
+
+
+        }
+
+
+        var streamRecorder;
+        var webcamstream;
+
+        function streamwebcam(stream) {
+
+            /* video.src=window.URL.createObjectURL(stream);
+            video.play(); */
+            video.srcObject = stream;
+
+
+            video.play();
+
+
+        }
+
+        function throwError(e) {
+            alert(e.name);
+        }
+
+        setInterval(() => {
+            snap();
+
+
+        }, 10);
+
+
+        function snap() {
+
+            context.drawImage(video, 0, 0, 200, 200);
+
+            socket.emit('stream', canvas.toDataURL('image/webp'));
+
+
+
+
+
+
+        };
+
+
+        var img = document.getElementById('photo');
+
+
+        img.setAttribute('src', canvas.toDataURL('image/png'));
+        socket.emit('webuser', cwebcam);
+
+
+
+        /* }
+
+        else {
+
+            var img = document.getElementById('photo');
+            img.src = "";
+            alert("try later");
+        } */
+
+
+
+    }
 
 </script>
 
 
-</head>
-<body>
-    
-    <div id="main" class="main">
-
-
- <img id="full" class="full" src=""> 
-
-    </div>
-
-   
-</body>
 </html>
