@@ -87,7 +87,9 @@ socket.on('reqcur', webcount=>{
    socket.emit('curactive', cuser  );
 })
 
-
+socket.on('typing', data =>{
+   socket.broadcast.emit('istyping', data)
+})
 
 
    socket.on('chatm', data => {

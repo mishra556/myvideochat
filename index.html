@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="//www.WebRTC-Experiment.com/RecordRTC.js"></script>
     <title>myonlinechat.App</title>
 
 
@@ -76,6 +77,9 @@
 
 
         })
+
+
+
 
 
 
@@ -232,6 +236,33 @@
         });
 
 
+
+        socket.on('istyping', data => {
+
+            alert(data.sender + ':' + data.msg);
+            /* var time = document.getElementById('mytime').innerText;
+            var ul = document.querySelector(".msgbox");
+            var st = data.sender + ':' + data.msg;
+            var listtext = document.createTextNode(st);
+            var msgadd = document.createElement('div');
+            msgadd.className = "msg left";
+            msgadd.innerText = st + '    ' + '  ' + time;
+
+
+            /* document.getElementsByClassName('.msgbox').appendChild(msgadd); */
+           /*  ul.append(msgadd);
+
+            scrollbottom();
+ */
+
+
+
+        });
+
+
+
+
+
         socket.on('leftli', name => {
 
             var st = name;
@@ -255,8 +286,7 @@
         });
 
 
-
-
+        
 
 
 
@@ -640,8 +670,9 @@
             float: right;
             clear: both;
         }
-        #video{
-           display: none;
+
+        #video {
+            display: none;
         }
 
 
@@ -821,7 +852,7 @@
 
                 <canvas id="canvas"></canvas><br>
                 <img id="photo" src="" alt="receiver srceen ">
-               
+
 
             </div>
 
@@ -940,6 +971,24 @@
 
     }
 
+
+
+    stext.addEventListener('keypress', () => {
+            socket.emit('typing', {
+                sender:sender,
+                msg:'Typing.......'
+                
+            })
+        })
+
+
+
+
+
+
+
+
+
     function outelement() {
 
         var msgadd = document.createElement('div');
@@ -1014,94 +1063,94 @@
     function datasend() {
 
 
-         var display = document.getElementById('vchat');
+        var display = document.getElementById('vchat');
         display.style = "display:block";
 
 
 
 
 
-      /*   alert('User connected ' + webcount);
-
-
-        if (webcount < 3) { */
-
-
- 
-
-
-            var video = document.getElementById('video');
-            var canvas = document.getElementById('canvas');
-            var context = canvas.getContext('2d');
-
-            var audio =
-
-                video.width = 200;
-            video.height = 200;
-
-
-
-
-            canvas.style.display = 'none';
-            /* canvas.width = 512;
-            canvas.height = 384; */
-
-
-            navigator.getUserMedia = navigator.getUserMedia || navigator.webkitgetusermedia || navigator.mozgetusermedia || navigator.ogetusermedia || navigator.Ogetusermedia || navigator.msgetusermedia;
-
-
-            if (navigator.getUserMedia) {
-                navigator.getUserMedia({ video: true }, streamwebcam, throwError);
-
-
-            }
-
-
-            var streamRecorder;
-            var webcamstream;
-
-            function streamwebcam(stream) {
-
-                /* video.src=window.URL.createObjectURL(stream);
-                video.play(); */
-                video.srcObject = stream;
-
-
-                video.play();
-
-
-            }
-
-            function throwError(e) {
-                alert(e.name);
-            }
-
-            setInterval(() => {
-                snap();
-
-
-            }, 20);
-
-
-            function snap() {
-
-                context.drawImage(video, 0, 0, 200, 200);
-
-                socket.emit('stream', canvas.toDataURL('image/webp'));
+        /*   alert('User connected ' + webcount);
+  
+  
+          if (webcount < 3) { */
 
 
 
 
 
+        var video = document.getElementById('video');
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
 
-            };
+        var audio =
+
+            video.width = 200;
+        video.height = 200;
 
 
-            var img = document.getElementById('photo');
 
 
-            img.setAttribute('src', canvas.toDataURL('image/png'));
-            socket.emit('webuser', cwebcam);
+        canvas.style.display = 'none';
+        /* canvas.width = 512;
+        canvas.height = 384; */
+
+
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitgetusermedia || navigator.mozgetusermedia || navigator.ogetusermedia || navigator.Ogetusermedia || navigator.msgetusermedia;
+
+
+        if (navigator.getUserMedia) {
+            navigator.getUserMedia({ video: true }, streamwebcam, throwError);
+
+
+        }
+
+
+        var streamRecorder;
+        var webcamstream;
+
+        function streamwebcam(stream) {
+
+            /* video.src=window.URL.createObjectURL(stream);
+            video.play(); */
+            video.srcObject = stream;
+
+
+            video.play();
+
+
+        }
+
+        function throwError(e) {
+            alert(e.name);
+        }
+
+        setInterval(() => {
+            snap();
+
+
+        }, 20);
+
+
+        function snap() {
+
+            context.drawImage(video, 0, 0, 200, 200);
+
+            socket.emit('stream', canvas.toDataURL('image/webp'));
+
+
+
+
+
+
+        };
+
+
+        var img = document.getElementById('photo');
+
+
+        img.setAttribute('src', canvas.toDataURL('image/png'));
+        socket.emit('webuser', cwebcam);
 
 
 

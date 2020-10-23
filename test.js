@@ -12,12 +12,12 @@ app.use(express.static(__dirname + '/public'));
 app.use(upload());
 
 app.get('/', function (req, res) {
-   res.sendfile('testw.html');
+   res.sendfile('test2.html');
 
 }); 
 
 app.get('/show', function (req, res) {
-   res.sendfile('test.html');
+   res.sendfile('videochat.html');
 
 }); 
 
