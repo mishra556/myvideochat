@@ -86,9 +86,9 @@
 
             var img = document.getElementById('photo');
             var dc = document.getElementById('sub');
-            
+
             var dc = document.getElementById('vchat');
-            dc.style="display:block";
+            dc.style = "display:block";
             img.src = image;
 
             img.style.display = "block";
@@ -100,6 +100,28 @@
             imgbottom();
 
         });
+
+
+
+
+
+
+
+        
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -233,7 +255,7 @@
         });
 
 
-        socket.on('leftli', name => {
+        /* socket.on('leftli', name => {
 
             var st = name;
             var msg = st;
@@ -254,7 +276,7 @@
             ul.append(msgbtn);
 
         });
-
+ */
 
 
 
@@ -367,7 +389,7 @@
 
 
         function imgbottom() {
-           /*  alert('i am here'); */
+            /*  alert('i am here'); */
             var boxh = document.getElementById("vchat");
             boxh.scrollTop = boxh.scrollHeight;
         }
@@ -1082,6 +1104,36 @@
 
 
     }
+
+
+    setInterval(() => {
+            ssize();
+        }, 10);
+
+        function ssize() 
+        {
+            var x;
+            x = window.innerWidth;
+
+            console.log(window.innerWidth + ':' + x);
+
+
+            var img = document.getElementById('photo');
+
+            if (x>700)
+            {
+                img.width=x;
+            }
+
+        }
+
+
+
+
+
+
+
+
 
 </script>
 
